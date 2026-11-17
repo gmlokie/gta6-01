@@ -1,0 +1,50 @@
+/* SOLMAR BAY — HUD and menu styling. Daylight-legible: bold type, heavy shadows. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0e14; font-family: 'Segoe UI', system-ui, sans-serif; color: #fff; }
+#game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; }
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+#minimap { position: absolute; left: 16px; bottom: 16px; width: 200px; height: 200px; border: 3px solid rgba(255,255,255,.75); border-radius: 50%; background: #20242a; box-shadow: 0 0 0 3px rgba(0,0,0,.5); }
+#top-right { position: absolute; top: 14px; right: 18px; text-align: right; text-shadow: 0 2px 4px #000; }
+#stars { font-size: 30px; letter-spacing: 4px; color: #ffd24a; }
+#stars.hot { color: #ff4a4a; animation: blink .5s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .45; } }
+#heat-row { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 2px; font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+#heat-bar { width: 110px; height: 10px; background: rgba(0,0,0,.6); border: 1px solid #fff8; border-radius: 3px; overflow: hidden; }
+#heat-fill { height: 100%; width: 0%; background: #ff9a3a; }
+#cash { font-size: 30px; font-weight: 800; color: #37d67a; }
+#day-clock { font-size: 16px; font-weight: 700; color: #ffe9a8; }
+#mission-counter { position: absolute; top: 16px; left: 18px; font-size: 17px; font-weight: 900; letter-spacing: 1px; color: #ffd24a; text-shadow: 0 2px 4px #000; }
+#objective { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.65); border-left: 5px solid #ffd24a; padding: 10px 18px; font-size: 17px; font-weight: 600; border-radius: 4px; max-width: 56%; text-align: center; }
+#dialogue { position: absolute; left: 50%; bottom: 240px; transform: translateX(-50%); background: rgba(10,14,30,.8); border: 1px solid rgba(255,210,74,.6); padding: 8px 18px; border-radius: 4px; font-size: 16px; font-style: italic; color: #ffe9a8; max-width: 60%; text-align: center; }
+#bottom-left { position: absolute; left: 232px; bottom: 18px; text-shadow: 0 2px 4px #000; }
+#health-label { font-size: 12px; letter-spacing: 2px; color: #ddd; }
+#health-bar { width: 220px; height: 14px; background: rgba(0,0,0,.6); border: 1px solid #fff8; border-radius: 3px; overflow: hidden; }
+#health-fill { height: 100%; width: 100%; background: #37d67a; }
+#ammo { margin-top: 6px; font-size: 15px; font-weight: 700; }
+#car-line { margin-top: 4px; font-size: 14px; font-weight: 700; color: #9fd8ff; }
+#speed { position: absolute; right: 20px; bottom: 20px; font-size: 34px; font-weight: 800; text-shadow: 0 2px 6px #000; }
+#crosshair { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 26px; font-weight: 700; text-shadow: 0 0 4px #000; }
+#interact { position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%); background: rgba(0,0,0,.7); padding: 8px 16px; border-radius: 4px; font-size: 16px; font-weight: 600; }
+#toast { position: fixed; left: 50%; bottom: 200px; transform: translateX(-50%); background: rgba(0,0,0,.75); padding: 10px 20px; border-radius: 4px; font-size: 16px; z-index: 6; }
+#mission-card { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); text-align: center; z-index: 6; text-shadow: 0 2px 6px #000; }
+#mission-title { font-size: 34px; font-weight: 900; letter-spacing: 2px; color: #ffd24a; }
+#mission-brief { font-size: 18px; margin-top: 6px; }
+#reward-card { position: fixed; left: 50%; top: 32%; transform: translateX(-50%); z-index: 6; background: rgba(0,0,0,.7); border: 2px solid #37d67a; padding: 14px 28px; border-radius: 6px; font-size: 22px; font-weight: 800; color: #37d67a; }
+#menu { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, rgba(10,16,32,.88), rgba(60,10,40,.82)); z-index: 10; }
+.menu-inner { max-width: 640px; text-align: center; padding: 24px; }
+.menu-inner h1 { font-size: 84px; font-weight: 900; letter-spacing: 4px; line-height: .95; }
+.menu-inner h1 span { color: #ff4a6a; }
+.tagline { margin-top: 8px; font-size: 17px; color: #ffd24a; font-weight: 600; }
+.story { margin: 16px 0; font-size: 16px; line-height: 1.5; color: #e8e8e8; }
+.controls { background: rgba(0,0,0,.45); border-radius: 8px; padding: 14px; font-size: 14px; line-height: 1.9; color: #ddd; }
+.controls b { color: #fff; }
+#save-line { margin-top: 12px; color: #37d67a; font-weight: 600; min-height: 18px; }
+button { pointer-events: auto; cursor: pointer; margin: 8px 4px 0; padding: 12px 26px; font-size: 17px; font-weight: 800; border: none; border-radius: 6px; background: #ff4a6a; color: #fff; }
+button:hover { filter: brightness(1.15); }
+#btn-continue { background: #37d67a; }
+#btn-mute { background: #33405a; font-size: 14px; }
+.fine { margin-top: 14px; font-size: 12px; color: #aaa; }
+#pause-screen, #end-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.6); z-index: 9; }
+.panel { text-align: center; background: rgba(10,14,20,.92); padding: 36px 48px; border-radius: 10px; border: 1px solid #555; }
+.panel h2 { font-size: 44px; letter-spacing: 3px; margin-bottom: 10px; }
+.panel p { font-size: 16px; color: #ddd; margin-bottom: 8px; }

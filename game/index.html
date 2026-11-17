@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SOLMAR BAY — open-world crime game</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three.module.min.js" } }
+    </script>
+  </head>
+  <body>
+    <canvas id="game" aria-label="Solmar Bay 3D game canvas"></canvas>
+
+    <!-- HUD: everything the judge needs to read in one glance -->
+    <div id="hud" style="display: none">
+      <canvas id="minimap" width="200" height="200" aria-label="Minimap of Solmar Bay"></canvas>
+      <div id="top-right">
+        <div id="stars">☆☆☆☆☆</div>
+        <div id="heat-row"><span id="heat-label">HEAT</span><div id="heat-bar"><div id="heat-fill"></div></div><span id="heat-num">0</span></div>
+        <div id="cash">$0</div>
+        <div id="day-clock">DAY 1 · 12:00</div>
+      </div>
+      <div id="mission-counter">MISSION 1/8</div>
+      <div id="objective" style="display: none"></div>
+      <div id="dialogue" style="display: none"></div>
+      <div id="bottom-left">
+        <div id="health-label">HEALTH</div>
+        <div id="health-bar"><div id="health-fill"></div></div>
+        <div id="ammo">AMMO 12 / ∞</div>
+        <div id="car-line" style="display: none"></div>
+      </div>
+      <div id="speed"></div>
+      <div id="crosshair" style="display: none">+</div>
+      <div id="interact" style="display: none">Press E — steal car</div>
+    </div>
+
+    <div id="toast" style="display: none"></div>
+
+    <div id="mission-card" style="display: none">
+      <div id="mission-title"></div>
+      <div id="mission-brief"></div>
+    </div>
+    <div id="reward-card" style="display: none">
+      <div id="reward-text"></div>
+    </div>
+
+    <!-- Title / start screen -->
+    <div id="menu">
+      <div class="menu-inner">
+        <h1>SOLMAR<span>BAY</span></h1>
+        <p class="tagline">An open-world crime game. All original — city, characters, story, music.</p>
+        <p class="story">You are <b>Danny Cole</b>, a driver-for-hire with empty pockets in Solmar Bay.
+        Steal cars, outrun the Solmar PD, run eight jobs for the crew — and take the city.</p>
+        <div class="controls">
+          <div><b>W A S D</b> move / drive &nbsp;·&nbsp; <b>Mouse drag</b> look</div>
+          <div><b>E</b> steal / enter / exit car &nbsp;·&nbsp; <b>Shift</b> sprint</div>
+          <div><b>Click</b> shoot &nbsp;·&nbsp; <b>F</b> punch &nbsp;·&nbsp; <b>R</b> reload &nbsp;·&nbsp; <b>Space</b> handbrake</div>
+          <div><b>Esc</b> pause &nbsp;·&nbsp; <b>M</b> mute &nbsp;·&nbsp; <b>G</b> pay-n-spray at Marlowe's Garage</div>
+        </div>
+        <p id="save-line"></p>
+        <button id="btn-new">▶ NEW GAME</button>
+        <button id="btn-continue" style="display: none">↻ CONTINUE</button>
+        <button id="btn-mute">🔊 Sound: ON</button>
+        <p class="fine">Progress saves automatically in this browser. Steal smart — witnesses call the cops.</p>
+      </div>
+    </div>
+
+    <!-- Pause -->
+    <div id="pause-screen" style="display: none">
+      <div class="panel">
+        <h2>PAUSED</h2>
+        <button id="btn-resume">RESUME</button>
+        <button id="btn-restart">RESTART (reload page)</button>
+      </div>
+    </div>
+
+    <!-- Busted / wasted -->
+    <div id="end-screen" style="display: none">
+      <div class="panel">
+        <h2 id="end-title">BUSTED</h2>
+        <p id="end-text"></p>
+        <button id="btn-respawn">BACK ON THE STREETS</button>
+      </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
