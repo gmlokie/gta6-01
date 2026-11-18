@@ -32,10 +32,12 @@ if (mode === 'all' || mode === 'shots') {
   fs.mkdirSync(OUT, { recursive: true });
   // Dossier cap: max 4 screenshots, each <=256 KiB. The 4 gameplay stills go
   // to OUT as JPEG; the menu still is archive-only (shots-png/), never in the entry.
+  // P0 fix (18 Nov): 'beach' replaces 'drive' as the 2nd still (drive ≈ city);
+  // all stills re-shot at golden hour (?sunset=1) for the judged set.
   const ARCHIVE = '/home/hatch/workspace/bounty-tools/makefun/entries/gta6-01-r2/shots-png';
   fs.mkdirSync(ARCHIVE, { recursive: true });
-  for (const [shot, out] of [['menu', null], ['city', '1-city.jpg'], ['drive', '2-drive.jpg'], ['chase', '3-chase.jpg']]) {
-    await page.goto(`${BASE}/?shot=${shot}&seed=7`, { waitUntil: 'load' });
+  for (const [shot, out] of [['menu', null], ['city', '1-city.jpg'], ['beach', '2-beach.jpg'], ['chase', '3-chase.jpg']]) {
+    await page.goto(`${BASE}/?shot=${shot}&seed=7&sunset=1`, { waitUntil: 'load' });
     try {
       await page.waitForFunction(() => window.__shotReady, null, { timeout: 30000 });
     } catch { console.log(`shot ${shot}: __shotReady TIMEOUT`); }
@@ -46,7 +48,7 @@ if (mode === 'all' || mode === 'shots') {
     console.log(`shot ${shot}: ${file} ${sz} bytes`);
   }
   // mission shot is the 4th deliverable: plaza standoff
-  await page.goto(`${BASE}/?shot=mission&seed=7`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?shot=mission&seed=7&sunset=1`, { waitUntil: 'load' });
   try { await page.waitForFunction(() => window.__shotReady, null, { timeout: 30000 }); } catch { console.log('shot mission: __shotReady TIMEOUT'); }
   await page.waitForTimeout(1500);
   const file = `${OUT}/4-mission.jpg`;

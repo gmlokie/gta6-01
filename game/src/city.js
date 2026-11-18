@@ -30,17 +30,38 @@ function addTree(scene, x, z, leafMat, trunkMat) {
   top.position.set(x, 3.4, z); top.castShadow = true; scene.add(top);
 }
 
-export function buildCity(scene) {
+export function buildCity(scene, opts = {}) {
   const rng = mulberry32(20261118);
   const colliders = []; // {x0,z0,x1,z1}
   const winTex = facadeTexture(rng);
 
   // --- sky, fog, lights: bright daylight so screenshots stay legible ---
-  scene.background = new THREE.Color(0x87b5e0);
-  scene.fog = new THREE.Fog(0x9fc3e8, 220, 520);
-  scene.add(new THREE.HemisphereLight(0xbfd9ff, 0x8a8a72, 1.6));
-  const sun = new THREE.DirectionalLight(0xfff2d0, 2.2);
-  sun.position.set(120, 180, 60);
+  // opts.sunset: golden-hour preset for the judged stills (?sunset=1) —
+  // orange haze, warm low sun from the west, long shadows. Gameplay is
+  // unchanged; only the lighting params differ. Values reconciled from two
+  // bench rounds (Gemini + Perplexity): exposure 1.2, fog density 0.0035
+  // (Perplexity's 0.0028 beach / Gemini's 0.015 was far too heavy at this
+  // 480-unit map scale), sun due west ~13° elevation, hemi 1.45 (raised
+  // three times after the first shoots — the street canyon read as night).
+  const sunset = !!opts.sunset;
+  scene.background = new THREE.Color(sunset ? 0xff8f4d : 0x87b5e0);
+  scene.fog = sunset
+    ? new THREE.FogExp2(0xff9a56, 0.0035)
+    : new THREE.Fog(0x9fc3e8, 220, 520);
+  scene.add(new THREE.HemisphereLight(
+    sunset ? 0xffc08a : 0xbfd9ff, sunset ? 0x3d2a22 : 0x8a8a72, sunset ? 1.45 : 1.6));
+  const sun = new THREE.DirectionalLight(sunset ? 0xffab3d : 0xfff2d0, sunset ? 3.0 : 2.2);
+  // low western sun: ~13° elevation, shadows rake east across the streets
+  sun.position.set(sunset ? -70 : 120, sunset ? 16 : 180, sunset ? 0 : 60);
+  // low sun disc on the western horizon so the sunset sky isn't empty
+  if (sunset) {
+    const disc = new THREE.Mesh(
+      new THREE.CircleGeometry(18, 24),
+      new THREE.MeshBasicMaterial({ color: 0xffd27a, fog: false }));
+    disc.position.set(-280, 30, 0);
+    disc.rotation.y = Math.PI / 2; // face east, toward the city
+    scene.add(disc);
+  }
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.left = -260; sun.shadow.camera.right = 260;

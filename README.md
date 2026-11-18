@@ -68,5 +68,6 @@ Steal cars, outrun the Solmar PD, run eight jobs for the crew — and take the c
   `/output` and writes `dossier.json` (concurrent-safe, pid + random staging).
 - `serve.ts` — local static server for `game/`.
 - `test-game.mjs` — headless QA: in-game self-test + 4 screenshots.
-- `screenshots/` — the 4 judged stills (city, drive, chase, mission).
+- `screenshots/` — the 4 judged stills (city, beach, chase, mission),
+  re-shot at golden hour (`?sunset=1`).
 - `vendor/makefun-game.ts` — the kit's dossier library, unchanged.

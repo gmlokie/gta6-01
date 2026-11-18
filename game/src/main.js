@@ -21,6 +21,12 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFShadowMap;
+// Golden-hour stills (?sunset=1): filmic tone mapping so the warm light
+// rolls off instead of clipping. Gameplay (no param) is untouched.
+if (params.has('sunset')) {
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+}
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 900);
 addEventListener('resize', () => {
@@ -31,7 +37,7 @@ addEventListener('resize', () => {
 // ---------- world ----------
 const input = new Input(canvas);
 const audio = new AudioEngine();
-const city = buildCity(scene);
+const city = buildCity(scene, { sunset: params.has('sunset') });
 const traffic = new TrafficSystem(scene);
 const peds = new PedSystem(scene);
 const police = new PoliceSystem(scene);
@@ -589,7 +595,7 @@ function setupShot(name) {
   else if (name === 'city') {
     player.x = 0; player.z = 8; player.heading = Math.PI; S.camYaw = Math.PI; S.camPitch = 0.25;
     startMission(0);
-    traffic.spawn(4, { x: 0, z: 0 }); peds.spawn(6, { x: 0, z: 0 });
+    traffic.spawn(8, { x: 0, z: 0 }); peds.spawn(10, { x: 0, z: 0 });
   } else if (name === 'drive') {
     const car = createCar(scene, 'sports', 0xd83838);
     car.x = 0; car.z = 40; car.heading = Math.PI / 2; car.speed = 18; car.sync();
@@ -597,6 +603,22 @@ function setupShot(name) {
     traffic.spawn(6, { x: 0, z: 40 }); peds.spawn(6, { x: 0, z: 40 });
     S.camYaw = Math.PI / 2 + Math.PI; S.camPitch = 0.3;
     startMission(1);
+  } else if (name === 'beach') {
+    // beach road at the south edge (z=160): sea on the left, low western
+    // sun dead ahead. Same car/setup as drive, staged on the coast road;
+    // this still replaces 'drive' in the judged set (drive ≈ city).
+    // Heading: atan2(dx,dz) — -PI/2 is WEST (-x). (PI would be north.)
+    // The car drives on the sand (z≈240) so the sea is close on the left
+    // and the north-side buildings don't fill the right half of the frame.
+    const car = createCar(scene, 'sports', 0xd83838);
+    car.x = 0; car.z = 240; car.heading = -Math.PI / 2; car.speed = 22; car.sync();
+    S.playerCar = car; car.isPlayer = true; player.group.visible = false;
+    traffic.spawn(8, { x: 0, z: 160 });
+    // peds on the sand near the car, never on the road itself — the first
+    // shoot hit a ped on the road and the still showed a wanted star
+    peds.spawn(6, { x: 0, z: 235 });
+    S.camYaw = Math.PI / 2; S.camPitch = 0.12; // flatter: more sky + sea
+    startMission(0); // docks beacon sits just off the beach road, in frame
   } else if (name === 'chase') {
     const car = createCar(scene, 'sedan', 0x3a6ad8);
     car.x = 0; car.z = 0; car.heading = 0; car.speed = 20; car.sync();
@@ -609,7 +631,7 @@ function setupShot(name) {
       pc.x = px; pc.z = pz; pc.heading = Math.PI; pc.speed = 22; pc.sync();
       police.cars.push(pc);
     }
-    traffic.spawn(4, { x: 0, z: 0 });
+    traffic.spawn(8, { x: 0, z: 0 });
     S.camYaw = Math.PI; S.camPitch = 0.3;
     setObjective(160, -160, 'Lose the heat!');
   } else if (name === 'mission') {
@@ -621,6 +643,11 @@ function setupShot(name) {
     S.camYaw = player.heading + Math.PI; S.camPitch = 0.3;
     startMission(3);
   }
+  // stage the HUD for the still: golden-hour clock + a plausible
+  // mid-mission cash balance so it never reads $0 ("nothing happened yet")
+  if (params.has('sunset')) S.clockMin = 18 * 60 + 45; // 18:45
+  const SHOT_CASH = { city: 1850, drive: 2400, beach: 2900, chase: 4200, mission: 3600 };
+  if (name in SHOT_CASH) S.cash = SHOT_CASH[name];
   updateHUD();
   setTimeout(() => { window.__shotReady = true; }, 1500);
 }
